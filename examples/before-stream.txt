@@ -1,0 +1,26 @@
+# BEFORE — omniroute v3.8.53, gh/auto (upstream: mai-code-1.1-flash), stream: true
+# Prompt: "jawab persis angka 1"   (captured via /v1/chat/completions)
+#
+# After the normal token stream finishes, the SAME full text is re-emitted 3x.
+# Combined result perceived by the client: "1111"
+#
+data: {"id":"chatcmpl-…","object":"chat.completion.chunk","model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"role":"assistant","content":"1"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-…","object":"chat.completion.chunk","model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"content":"1"},"finish_reason":null}]}   ← duplicate (output_text.done snapshot)
+
+data: {"id":"chatcmpl-…","object":"chat.completion.chunk","model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"content":"1"},"finish_reason":null}]}   ← duplicate (content_part.done snapshot)
+
+data: {"id":"chatcmpl-…","object":"chat.completion.chunk","model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"content":"1"},"finish_reason":null}]}   ← duplicate (output_item.done snapshot)
+
+data: {"id":"chatcmpl-…","object":"chat.completion.chunk","model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":310,"completion_tokens":81}}
+
+data: [DONE]
+
+# Longer prompt ("Say exactly: Greeting. Nothing else.") produced:
+#   "GreetingGreetingGreetingGreeting" — 3 identical full-text chunks after the real stream.
+#
+# Session titles in clients (e.g. OpenCode) showed the text 4x in a row.
+#
+# Provider-side accumulation was CORRECT: the omniroute call log
+# (~/.omniroute/call_logs/…json) contained a single copy of the text, proving the
+# duplication happens only during emission of the .done snapshots to the client.

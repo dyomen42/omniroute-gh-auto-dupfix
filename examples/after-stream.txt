@@ -1,0 +1,29 @@
+# AFTER — same omniroute install, chunk-bundle guard applied, identical prompts
+#
+# Prompt: "jawab persis angka 1" (gh/auto, stream: true)
+data: {"id":"chatcmpl-1794182230572","object":"chat.completion.chunk","created":1794182230,"model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"role":"assistant","content":"1"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1794182230572","object":"chat.completion.chunk","created":1794182230,"model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":310,"completion_tokens":61,"total_tokens":371,"tokens_per_second":264.222}}
+
+data: [DONE]
+
+# → exactly ONE content chunk.
+
+# Prompt: "Say exactly: Greeting. Nothing else." (gh/auto, stream: true)
+data: {"id":"chatcmpl-1794182256441","object":"chat.completion.chunk","created":1794182256,"model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"role":"assistant","content":"Greeting"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1794182256441","object":"chat.completion.chunk","created":1794182256,"model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{"content":"."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1794182256441","object":"chat.completion.chunk","created":1794182256,"model":"mai-code-1.1-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":311,"completion_tokens":6,"total_tokens":317,"tokens_per_second":26.964}}
+
+data: [DONE]
+
+# → "Greeting." complete and NOT duplicated.
+
+# Prompt: "Reply with exactly: OK-TEST" (gh/auto, stream: true)
+#   accumulated content: [OK-TEST]  (1 occurrence)
+
+# Non-streaming POST /v1/chat/completions: {"message":{"content":"NONSTREAM"}} — clean.
+
+# POST /v1/responses passthrough (gh/auto): response.output_text.delta "Hi" x1,
+# "." x1, then a single output_text.done — standard Responses API shape.
